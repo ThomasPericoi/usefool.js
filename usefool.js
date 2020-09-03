@@ -97,6 +97,11 @@ function beautifyNumber(x) {
   return x.toString().replace(/\B(?!\.\d*)(?=(\d{3})+(?!\d))/g, " ");
 }
 
+function countCharacter(string, character) {
+  // Output
+  return string.split(character).length - 1;
+}
+
 /* Functions about styles */
 
 function isLight(color) {
