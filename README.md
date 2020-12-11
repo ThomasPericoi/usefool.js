@@ -1,3 +1,5 @@
+![Logo of UsefoolJS](https://github.com/ThomasPericoi/UsefoolFunctions/blob/master/usefooljs.svg?raw=true)
+
 # Usefool functions
 
 Some simple JS functions very useful that I gathered and optimized through the years. I'm old.
