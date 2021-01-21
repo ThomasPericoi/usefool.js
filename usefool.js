@@ -170,3 +170,17 @@ function searchOnGoogleImage(query) {
 function openUrl(query) {
   window.open(query, "newTab");
 }
+
+/* Functions about page title */
+
+function changeTitleOnBlur(string) {
+  var originalTitle = document.title;
+
+  window.onfocus = function () {
+    document.title = originalTitle;
+  };
+
+  window.onblur = function () {
+    document.title = string;
+  };
+}
