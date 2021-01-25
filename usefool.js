@@ -174,12 +174,13 @@ function openUrl(query) {
 /* Functions about page title */
 
 function changeTitleOnBlur(string) {
+  // Var(s)
   var originalTitle = document.title;
 
+  // Process
   window.onfocus = function () {
     document.title = originalTitle;
   };
-
   window.onblur = function () {
     document.title = string;
   };
