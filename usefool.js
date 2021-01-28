@@ -176,7 +176,6 @@ function openUrl(query) {
 function changeTitleOnBlur(string) {
   // Var(s)
   var originalTitle = document.title;
-
   // Process
   window.onfocus = function () {
     document.title = originalTitle;
