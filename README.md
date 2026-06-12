@@ -30,6 +30,15 @@ getRandomIntBetween(1, 6);
 // 4
 ```
 
+### `getRandomFloatBetween(min, max, decimals)`
+
+Returns a random floating-point number between `min` and `max`. If `decimals` is provided, the result is rounded to that number of decimal places.
+
+```js
+getRandomFloatBetween(1, 2, 2);
+// 1.37
+```
+
 ### `getRandomIdFromArray(arrayName)`
 
 Returns a random valid index from an array-like value. Returns `-1` when the input is missing or empty.
@@ -222,6 +231,15 @@ truncate("Too much text", 8, "!");
 // "Too muc!"
 ```
 
+### `escapeHtml(string)`
+
+Escapes HTML-sensitive characters so a string can be displayed as text instead of being interpreted as markup.
+
+```js
+escapeHtml('<button class="danger">Delete</button>');
+// "&lt;button class=&quot;danger&quot;&gt;Delete&lt;/button&gt;"
+```
+
 ## Style helpers
 
 ### `isLight(color)`
@@ -236,17 +254,6 @@ isLight("#111");
 // false
 ```
 
-### `changeElementBgColor(element, color)`
-
-Changes an element's background color. If the element is invalid, the function does nothing.
-
-```js
-const button = document.querySelector("button");
-
-changeElementBgColor(button, "#3ecdef");
-// button.style.backgroundColor is now "#3ecdef"
-```
-
 ### `transformToBlob(element)`
 
 Applies a random organic `border-radius` value to an element.
@@ -256,6 +263,24 @@ const card = document.querySelector(".card");
 
 transformToBlob(card);
 // card.style.borderRadius is now a random blob-like shape
+```
+
+### `setCssVariable(name, value, element = document.documentElement)`
+
+Sets a CSS custom property on an element. By default, it writes to `document.documentElement`, which means the variable is available globally.
+
+```js
+setCssVariable("--brand-color", "#3ecdef");
+// document.documentElement now has --brand-color set to "#3ecdef"
+```
+
+### `getCssVariable(name, element = document.documentElement)`
+
+Reads a CSS custom property from an element and returns the trimmed value.
+
+```js
+getCssVariable("--brand-color");
+// "#3ecdef"
 ```
 
 ## Clipboard helpers
@@ -300,6 +325,15 @@ openUrl("https://example.com");
 // Opens https://example.com
 ```
 
+### `getUrlParameter(name, url = window.location.href)`
+
+Reads a query parameter from a URL. If no URL is provided, it reads from the current page URL.
+
+```js
+getUrlParameter("page", "https://example.com/articles?page=2");
+// "2"
+```
+
 ### `changeTitleOnBlur(string)`
 
 Changes the page title when the window loses focus, then restores the original title when the window gets focus again.
@@ -316,4 +350,42 @@ Returns `true` when the current browser looks like a mobile or touch-oriented de
 ```js
 isMobile();
 // true or false
+```
+
+## Time helpers
+
+### `sleep(ms)`
+
+Returns a promise that resolves after the given number of milliseconds. Useful inside `async` functions.
+
+```js
+await sleep(500);
+// waits for half a second
+```
+
+### `debounce(callback, delay = 250)`
+
+Returns a debounced version of a function. The callback runs only after calls have stopped for the given delay.
+
+```js
+const saveSearch = debounce(function (query) {
+  console.log(query);
+}, 300);
+
+saveSearch("use");
+saveSearch("useful");
+// Only "useful" is logged after 300ms
+```
+
+### `throttle(callback, delay = 250)`
+
+Returns a throttled version of a function. The callback runs immediately, then at most once per delay.
+
+```js
+const onScroll = throttle(function () {
+  console.log(window.scrollY);
+}, 200);
+
+window.addEventListener("scroll", onScroll);
+// Logs scroll position at most once every 200ms
 ```

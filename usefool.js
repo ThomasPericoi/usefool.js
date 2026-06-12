@@ -19,6 +19,25 @@ function getRandomIntBetween(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+function getRandomFloatBetween(min, max, decimals) {
+  min = Number(min);
+  max = Number(max);
+
+  if (!Number.isFinite(min) || !Number.isFinite(max)) {
+    return NaN;
+  }
+
+  if (min > max) {
+    var oldMin = min;
+    min = max;
+    max = oldMin;
+  }
+
+  var randomNumber = Math.random() * (max - min) + min;
+
+  return decimals === undefined ? randomNumber : roundNumber(randomNumber, decimals);
+}
+
 function getRandomIdFromArray(arrayName) {
   if (!arrayName || arrayName.length === 0) {
     return -1;
@@ -260,6 +279,18 @@ function truncate(string, maxLength, suffix = "...") {
   return string.slice(0, maxLength - suffix.length) + suffix;
 }
 
+function escapeHtml(string) {
+  return String(string).replace(/[&<>"']/g, function (character) {
+    return {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#039;",
+    }[character];
+  });
+}
+
 /* Functions about styles */
 
 function isLight(color) {
@@ -286,14 +317,6 @@ function isLight(color) {
   return brightness > 155;
 }
 
-function changeElementBgColor(element, color) {
-  if (!element || !element.style) {
-    return;
-  }
-
-  element.style.backgroundColor = color;
-}
-
 function transformToBlob(element) {
   if (!element || !element.style) {
     return;
@@ -312,6 +335,22 @@ function transformToBlob(element) {
   }
 
   element.style.borderRadius = randomRadius();
+}
+
+function setCssVariable(name, value, element = document.documentElement) {
+  if (!element || !element.style) {
+    return;
+  }
+
+  element.style.setProperty(name, value);
+}
+
+function getCssVariable(name, element = document.documentElement) {
+  if (!element || !window.getComputedStyle) {
+    return "";
+  }
+
+  return window.getComputedStyle(element).getPropertyValue(name).trim();
 }
 
 /* Functions about clipboard */
@@ -346,6 +385,14 @@ function openUrl(query) {
   window.open(query, "newTab");
 }
 
+function getUrlParameter(name, url = window.location.href) {
+  try {
+    return new URL(url).searchParams.get(name);
+  } catch (error) {
+    return null;
+  }
+}
+
 /* Functions about page title */
 
 function changeTitleOnBlur(string) {
@@ -372,4 +419,53 @@ function isMobile() {
   }
 
   return /android|iphone|ipad|ipod|mobile/i.test(navigator.userAgent || "");
+}
+
+/* Functions about time */
+
+function sleep(ms) {
+  return new Promise(function (resolve) {
+    setTimeout(resolve, Math.max(0, Number(ms) || 0));
+  });
+}
+
+function debounce(callback, delay = 250) {
+  var timeoutId;
+
+  return function () {
+    var context = this;
+    var args = arguments;
+
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(function () {
+      callback.apply(context, args);
+    }, Math.max(0, Number(delay) || 0));
+  };
+}
+
+function throttle(callback, delay = 250) {
+  var isWaiting = false;
+  var lastArgs;
+  var lastContext;
+
+  return function () {
+    if (isWaiting) {
+      lastArgs = arguments;
+      lastContext = this;
+      return;
+    }
+
+    callback.apply(this, arguments);
+    isWaiting = true;
+
+    setTimeout(function () {
+      isWaiting = false;
+
+      if (lastArgs) {
+        callback.apply(lastContext, lastArgs);
+        lastArgs = undefined;
+        lastContext = undefined;
+      }
+    }, Math.max(0, Number(delay) || 0));
+  };
 }
