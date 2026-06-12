@@ -2,48 +2,318 @@
 
 # Usefool functions
 
-Some simple JS functions very useful that I gathered and optimized through the years. I'm old.
+Usefool is a small collection of plain JavaScript helpers for everyday tasks: random values, arrays, formatting, DOM styling, clipboard actions, browser utilities, and responsive checks.
 
-## What's inside ?
+It is mostly meant as a personal utility file: simple functions, no build step required, no dependency, and no framework assumptions.
 
-### Generate a random color
+## Usage
 
-**Input**
+Include `usefool.js` in a page, then call the helpers directly.
 
-    getRandomColor();
+```html
+<script src="usefool.js"></script>
+<script>
+  console.log(getRandomColor());
+</script>
+```
 
-**Output**
+Use `usefool.min.js` if you want the minified version.
 
-    "#3ecdef"
+## Random helpers
 
-### Detect if a letter is a vowel
+### `getRandomIntBetween(min, max)`
 
-**Input**
+Returns a random integer between `min` and `max`, including both limits. If `min` is greater than `max`, the function swaps them.
 
-    isVowel("u");
+```js
+getRandomIntBetween(1, 6);
+// 4
+```
 
-**Output**
+### `getRandomIdFromArray(arrayName)`
 
-    true
+Returns a random valid index from an array-like value. Returns `-1` when the input is missing or empty.
 
-### Nice formatting for numbers (meant to be read)
+```js
+getRandomIdFromArray(["red", "green", "blue"]);
+// 2
 
-**Input**
+getRandomIdFromArray([]);
+// -1
+```
 
-    beautifyNumber(10000000);
+### `getRandomValueFromArray(arrayName)`
 
-**Output**
+Returns a random value from an array-like value. Returns `undefined` when the input is missing or empty.
 
-    "10 000 000"
+```js
+getRandomValueFromArray(["red", "green", "blue"]);
+// "green"
+```
 
-### Detect if a color is "light"
+### `shuffleArray(arrayName)`
 
-**Input**
+Returns a shuffled copy of an array. The original array is not modified.
 
-    isLight("#3ecdef");
+```js
+const numbers = [1, 2, 3, 4];
 
-**Output**
+shuffleArray(numbers);
+// [3, 1, 4, 2]
 
-    true
+numbers;
+// [1, 2, 3, 4]
+```
 
-### And many more ...
+### `probability(probability, on = 100)`
+
+Returns `true` randomly according to the given probability. By default, `probability` is read as a value out of `100`.
+
+```js
+probability(25);
+// true roughly 25% of the time
+
+probability(1, 2);
+// true roughly 50% of the time
+```
+
+### `getRandomColor()`
+
+Returns a random hexadecimal color string.
+
+```js
+getRandomColor();
+// "#3ecdef"
+```
+
+## Array helpers
+
+### `uniqueArray(arrayName)`
+
+Returns a new array with duplicate primitive values removed.
+
+```js
+uniqueArray(["a", "a", "b", "c", "c"]);
+// ["a", "b", "c"]
+```
+
+### `compactArray(arrayName)`
+
+Returns a new array without falsy values such as `false`, `0`, `""`, `null`, `undefined`, and `NaN`.
+
+```js
+compactArray([0, "hello", false, 42, "", null]);
+// ["hello", 42]
+```
+
+### `chunkArray(arrayName, size)`
+
+Splits an array into smaller arrays of the given size.
+
+```js
+chunkArray([1, 2, 3, 4, 5], 2);
+// [[1, 2], [3, 4], [5]]
+```
+
+## Format helpers
+
+### `isConsonant(x)`
+
+Returns `true` when `x` is one of the supported consonant letters.
+
+```js
+isConsonant("b");
+// true
+
+isConsonant("a");
+// false
+```
+
+### `isVowel(x)`
+
+Returns `true` when `x` is one of the supported vowel letters: `a`, `e`, `i`, `o`, `u`, or `y`.
+
+```js
+isVowel("u");
+// true
+
+isVowel("z");
+// false
+```
+
+### `beautifyNumber(x)`
+
+Formats a number-like value with spaces between thousands.
+
+```js
+beautifyNumber(10000000);
+// "10 000 000"
+```
+
+### `clampNumber(number, min, max)`
+
+Keeps a number inside a range. If the number is lower than `min`, it returns `min`; if it is higher than `max`, it returns `max`.
+
+```js
+clampNumber(120, 0, 100);
+// 100
+
+clampNumber(-10, 0, 100);
+// 0
+```
+
+### `roundNumber(number, decimals = 0)`
+
+Rounds a number to a given number of decimal places.
+
+```js
+roundNumber(3.14159, 2);
+// 3.14
+
+roundNumber(3.7);
+// 4
+```
+
+### `mapNumber(number, inMin, inMax, outMin, outMax)`
+
+Maps a number from one range to another.
+
+```js
+mapNumber(5, 0, 10, 0, 100);
+// 50
+```
+
+### `countCharacter(string, character)`
+
+Counts how many times `character` appears in `string`.
+
+```js
+countCharacter("banana", "a");
+// 3
+```
+
+### `capitalize(string)`
+
+Uppercases the first character of a string and keeps the rest unchanged.
+
+```js
+capitalize("hello");
+// "Hello"
+```
+
+### `slugify(string)`
+
+Converts a string into a lowercase URL-friendly slug. Accents are removed, spaces and punctuation become hyphens.
+
+```js
+slugify("Hello, cafe!");
+// "hello-cafe"
+```
+
+### `truncate(string, maxLength, suffix = "...")`
+
+Shortens a string to a maximum length. If truncation happens, the suffix is added when there is enough room.
+
+```js
+truncate("Too much text", 8);
+// "Too m..."
+
+truncate("Too much text", 8, "!");
+// "Too muc!"
+```
+
+## Style helpers
+
+### `isLight(color)`
+
+Returns `true` when a hexadecimal color is visually light. Supports both short and long hex formats.
+
+```js
+isLight("#ffffff");
+// true
+
+isLight("#111");
+// false
+```
+
+### `changeElementBgColor(element, color)`
+
+Changes an element's background color. If the element is invalid, the function does nothing.
+
+```js
+const button = document.querySelector("button");
+
+changeElementBgColor(button, "#3ecdef");
+// button.style.backgroundColor is now "#3ecdef"
+```
+
+### `transformToBlob(element)`
+
+Applies a random organic `border-radius` value to an element.
+
+```js
+const card = document.querySelector(".card");
+
+transformToBlob(card);
+// card.style.borderRadius is now a random blob-like shape
+```
+
+## Clipboard helpers
+
+### `copyToClipboard(value)`
+
+Copies a value to the clipboard using the modern Clipboard API. Returns a promise that resolves to `true` when copying worked, or `false` when the Clipboard API is unavailable.
+
+This requires a secure context, such as HTTPS or localhost.
+
+```js
+await copyToClipboard("Hello clipboard");
+// true
+```
+
+## Browser helpers
+
+### `searchOnGoogle(query)`
+
+Opens a new tab with a Google search for the given query.
+
+```js
+searchOnGoogle("useful javascript helpers");
+// Opens https://google.com/search?q=useful%20javascript%20helpers
+```
+
+### `searchOnGoogleImage(query)`
+
+Opens a new tab with a Google Images search for the given query.
+
+```js
+searchOnGoogleImage("blue gradient");
+// Opens a Google Images search
+```
+
+### `openUrl(query)`
+
+Opens a URL in a new tab.
+
+```js
+openUrl("https://example.com");
+// Opens https://example.com
+```
+
+### `changeTitleOnBlur(string)`
+
+Changes the page title when the window loses focus, then restores the original title when the window gets focus again.
+
+```js
+changeTitleOnBlur("Come back!");
+// The document title changes to "Come back!" when the tab is blurred.
+```
+
+### `isMobile()`
+
+Returns `true` when the current browser looks like a mobile or touch-oriented device.
+
+```js
+isMobile();
+// true or false
+```
