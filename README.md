@@ -389,3 +389,9 @@ const onScroll = throttle(function () {
 window.addEventListener("scroll", onScroll);
 // Logs scroll position at most once every 200ms
 ```
+
+## License
+
+The JavaScript code is released under the MIT License. See `LICENSE`.
+
+The ASCII arts are credited in this README when the author is known.
